@@ -41,7 +41,6 @@ const cartSchema = new Schema<ICart>(
   },
 );
 
-// Helper method to calculate cart total
 cartSchema.methods.calculateTotalPrice = function () {
   this.totalPrice = this.items.reduce(
     (acc: number, item: ICartItem) => acc + item.price * item.quantity,
@@ -51,7 +50,6 @@ cartSchema.methods.calculateTotalPrice = function () {
 
 export const Cart = model<ICart>("Cart", cartSchema);
 
-// const abandonedCartSchema = new Schema(
 //   {
 //     userId: { type: Schema.Types.ObjectId, ref: "User" }, // যদি লগইন করা ইউজার হয়
 //     guestInfo: {
