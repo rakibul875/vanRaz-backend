@@ -1,26 +1,26 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 import {
   IAdminDashboardStats,
   IUserQueryFilters,
   IOrderQueryFilters,
-} from './admin.interface';
-import { User } from '../user/user.model';
-import { Shop } from '../sop/sop.model';
-import { Product } from '../products/product.model';
-import { Order } from '../order/order.model';
+} from "./admin.interface";
+import { User } from "../user/user.model";
+import { Shop } from "../sop/sop.model";
+import { Product } from "../products/product.model";
+import { Order } from "../order/order.model";
 
 const getDashboardStatsFromDB = async (): Promise<IAdminDashboardStats> => {
   let totalRevenue = 0;
   try {
     const revenueResult = await Order.aggregate([
-      { $match: { isCancelled: { $ne: true }, status: { $ne: 'cancelled' } } },
-      { $group: { _id: null, total: { $sum: '$totalAmount' } } },
+      { $match: { isCancelled: { $ne: true }, status: { $ne: "cancelled" } } },
+      { $group: { _id: null, total: { $sum: "$totalAmount" } } },
     ]);
     if (revenueResult.length > 0) {
       totalRevenue = revenueResult[0].total;
     }
   } catch (error) {
-    console.warn('Could not aggregate order revenue:', error);
+    console.warn("Could not aggregate order revenue:", error);
   }
 
   const [
@@ -35,8 +35,8 @@ const getDashboardStatsFromDB = async (): Promise<IAdminDashboardStats> => {
     Shop.countDocuments(),
     Order.countDocuments(),
     Product.countDocuments({ isDeleted: { $ne: true } }),
-    Shop.countDocuments({ status: 'pending' }),
-    Product.countDocuments({ status: 'pending', isDeleted: { $ne: true } }),
+    Shop.countDocuments({ status: "pending" }),
+    Product.countDocuments({ status: "pending", isDeleted: { $ne: true } }),
   ]);
 
   return {
@@ -51,7 +51,7 @@ const getDashboardStatsFromDB = async (): Promise<IAdminDashboardStats> => {
 };
 
 const getPendingShopsFromDB = async () => {
-  const pendingShops = await Shop.find({ status: 'pending' }).sort({
+  const pendingShops = await Shop.find({ status: "pending" }).sort({
     createdAt: -1,
   });
   return pendingShops;
@@ -59,17 +59,17 @@ const getPendingShopsFromDB = async () => {
 
 const approveShopInDB = async (shopId: string) => {
   if (!mongoose.Types.ObjectId.isValid(shopId)) {
-    throw { statusCode: 400, message: 'Invalid shop ID format' };
+    throw { statusCode: 400, message: "Invalid shop ID format" };
   }
 
   const shop = await Shop.findByIdAndUpdate(
     shopId,
-    { status: 'approved' },
-    { new: true }
+    { status: "approved" },
+    { new: true },
   );
 
   if (!shop) {
-    throw { statusCode: 404, message: 'Shop not found' };
+    throw { statusCode: 404, message: "Shop not found" };
   }
 
   return shop;
@@ -77,17 +77,20 @@ const approveShopInDB = async (shopId: string) => {
 
 const rejectShopInDB = async (shopId: string, reason: string) => {
   if (!mongoose.Types.ObjectId.isValid(shopId)) {
-    throw { statusCode: 400, message: 'Invalid shop ID format' };
+    throw { statusCode: 400, message: "Invalid shop ID format" };
   }
 
   const shop = await Shop.findByIdAndUpdate(
     shopId,
-    { status: 'rejected', rejectionReason: reason || 'Does not meet platform guidelines' },
-    { new: true }
+    {
+      status: "rejected",
+      rejectionReason: reason || "Does not meet platform guidelines",
+    },
+    { new: true },
   );
 
   if (!shop) {
-    throw { statusCode: 404, message: 'Shop not found' };
+    throw { statusCode: 404, message: "Shop not found" };
   }
 
   return shop;
@@ -95,11 +98,11 @@ const rejectShopInDB = async (shopId: string, reason: string) => {
 
 const getPendingProductsFromDB = async () => {
   const pendingProducts = await Product.find({
-    status: 'pending',
+    status: "pending",
     isDeleted: { $ne: true },
   })
-    .populate('shop', 'name ownerId phone')
-    .populate('category', 'name')
+    .populate("shop", "name ownerId phone")
+    .populate("category", "name")
     .sort({ createdAt: -1 });
 
   return pendingProducts;
@@ -107,17 +110,17 @@ const getPendingProductsFromDB = async () => {
 
 const approveProductInDB = async (productId: string) => {
   if (!mongoose.Types.ObjectId.isValid(productId)) {
-    throw { statusCode: 400, message: 'Invalid product ID format' };
+    throw { statusCode: 400, message: "Invalid product ID format" };
   }
 
   const product = await Product.findByIdAndUpdate(
     productId,
-    { status: 'approved' },
-    { new: true }
+    { status: "approved" },
+    { new: true },
   );
 
   if (!product) {
-    throw { statusCode: 404, message: 'Product not found' };
+    throw { statusCode: 404, message: "Product not found" };
   }
 
   return product;
@@ -125,17 +128,17 @@ const approveProductInDB = async (productId: string) => {
 
 const rejectProductInDB = async (productId: string, reason?: string) => {
   if (!mongoose.Types.ObjectId.isValid(productId)) {
-    throw { statusCode: 400, message: 'Invalid product ID format' };
+    throw { statusCode: 400, message: "Invalid product ID format" };
   }
 
   const product = await Product.findByIdAndUpdate(
     productId,
-    { status: 'rejected' },
-    { new: true }
+    { status: "rejected" },
+    { new: true },
   );
 
   if (!product) {
-    throw { statusCode: 404, message: 'Product not found' };
+    throw { statusCode: 404, message: "Product not found" };
   }
 
   return product;
@@ -152,9 +155,9 @@ const getAllUsersFromDB = async (filters: IUserQueryFilters) => {
 
   if (filters.search) {
     query.$or = [
-      { name: { $regex: filters.search, $options: 'i' } },
-      { email: { $regex: filters.search, $options: 'i' } },
-      { phone: { $regex: filters.search, $options: 'i' } },
+      { name: { $regex: filters.search, $options: "i" } },
+      { email: { $regex: filters.search, $options: "i" } },
+      { phone: { $regex: filters.search, $options: "i" } },
     ];
   }
 
@@ -184,18 +187,19 @@ const getAllUsersFromDB = async (filters: IUserQueryFilters) => {
 
 const updateUserRoleInDB = async (userId: string, newRole: string) => {
   if (!mongoose.Types.ObjectId.isValid(userId)) {
-    throw { statusCode: 400, message: 'Invalid user ID format' };
+    throw { statusCode: 400, message: "Invalid user ID format" };
   }
 
   // Security rules audit: admin role can never be assigned via API
-  if (newRole === 'admin') {
+  if (newRole === "admin") {
     throw {
       statusCode: 403,
-      message: 'Security Violation: Admin role cannot be assigned or changed via API!',
+      message:
+        "Security Violation: Admin role cannot be assigned or changed via API!",
     };
   }
 
-  if (!['user', 'moderator'].includes(newRole)) {
+  if (!["user", "moderator"].includes(newRole)) {
     throw {
       statusCode: 400,
       message: "Invalid role! Allowed roles are 'user' or 'moderator'.",
@@ -204,14 +208,14 @@ const updateUserRoleInDB = async (userId: string, newRole: string) => {
 
   const targetUser = await User.findById(userId);
   if (!targetUser) {
-    throw { statusCode: 404, message: 'User not found!' };
+    throw { statusCode: 404, message: "User not found!" };
   }
 
-  // Security check: cannot demote existing admin via API
-  if (targetUser.role === 'admin') {
+  if (targetUser.role === "admin") {
     throw {
       statusCode: 403,
-      message: 'Security Violation: Existing Admin accounts cannot have their roles modified via API!',
+      message:
+        "Security Violation: Existing Admin accounts cannot have their roles modified via API!",
     };
   }
 
@@ -223,10 +227,10 @@ const updateUserRoleInDB = async (userId: string, newRole: string) => {
 
 const updateUserStatusInDB = async (userId: string, newStatus: string) => {
   if (!mongoose.Types.ObjectId.isValid(userId)) {
-    throw { statusCode: 400, message: 'Invalid user ID format' };
+    throw { statusCode: 400, message: "Invalid user ID format" };
   }
 
-  if (!['active', 'blocked'].includes(newStatus)) {
+  if (!["active", "blocked"].includes(newStatus)) {
     throw {
       statusCode: 400,
       message: "Invalid status! Allowed values are 'active' or 'blocked'.",
@@ -235,14 +239,14 @@ const updateUserStatusInDB = async (userId: string, newStatus: string) => {
 
   const targetUser = await User.findById(userId);
   if (!targetUser) {
-    throw { statusCode: 404, message: 'User not found!' };
+    throw { statusCode: 404, message: "User not found!" };
   }
 
   // Security check: cannot block an admin account
-  if (targetUser.role === 'admin') {
+  if (targetUser.role === "admin") {
     throw {
       statusCode: 403,
-      message: 'Security Violation: Admin accounts cannot be blocked!',
+      message: "Security Violation: Admin accounts cannot be blocked!",
     };
   }
 
@@ -264,8 +268,8 @@ const getAllOrdersFromDB = async (filters: IOrderQueryFilters) => {
 
   const [orders, total] = await Promise.all([
     Order.find(query)
-      .populate('user', 'name email phone avatar')
-      .populate('items.product', 'name price images')
+      .populate("user", "name email phone avatar")
+      .populate("items.product", "name price images")
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: -1 }),
@@ -285,39 +289,39 @@ const getAllOrdersFromDB = async (filters: IOrderQueryFilters) => {
 
 const updateOrderStatusInDB = async (orderId: string, status: string) => {
   if (!mongoose.Types.ObjectId.isValid(orderId)) {
-    throw { statusCode: 400, message: 'Invalid order ID format' };
+    throw { statusCode: 400, message: "Invalid order ID format" };
   }
 
   const allowedStatuses = [
-    'pending',
-    'confirmed',
-    'processing',
-    'shipped',
-    'out_for_delivery',
-    'delivered',
-    'cancelled',
+    "pending",
+    "confirmed",
+    "processing",
+    "shipped",
+    "out_for_delivery",
+    "delivered",
+    "cancelled",
   ];
 
   if (!allowedStatuses.includes(status)) {
     throw {
       statusCode: 400,
-      message: `Invalid order status! Allowed statuses: [${allowedStatuses.join(', ')}]`,
+      message: `Invalid order status! Allowed statuses: [${allowedStatuses.join(", ")}]`,
     };
   }
 
   const updateData: Record<string, any> = { status };
-  if (status === 'cancelled') {
+  if (status === "cancelled") {
     updateData.isCancelled = true;
   }
 
   const order = await Order.findByIdAndUpdate(orderId, updateData, {
     new: true,
   })
-    .populate('user', 'name email phone avatar')
-    .populate('items.product', 'name price images');
+    .populate("user", "name email phone avatar")
+    .populate("items.product", "name price images");
 
   if (!order) {
-    throw { statusCode: 404, message: 'Order not found!' };
+    throw { statusCode: 404, message: "Order not found!" };
   }
 
   return order;
