@@ -74,21 +74,19 @@ const addToCartInDB = async (userId: string, payload: IAddToCartPayload) => {
     });
   }
 
-  // Recalculate total price
   cart.totalPrice = cart.items.reduce(
     (total, item) => total + item.price * item.quantity,
     0,
   );
 
   await cart.save();
-  // console.log("✅ Cart saved to database:", cart);
+
   return cart.populate({
     path: "items.product",
     select: "name images price discount stock",
   });
 };
 
-// 3. Update Cart Item Quantity
 const updateCartQuantityInDB = async (
   userId: string,
   productId: string,
@@ -126,7 +124,6 @@ const updateCartQuantityInDB = async (
 
   cart.items[itemIndex].quantity = quantity;
 
-  // Recalculate total price
   cart.totalPrice = cart.items.reduce(
     (total, item) => total + item.price * item.quantity,
     0,
@@ -139,7 +136,6 @@ const updateCartQuantityInDB = async (
   });
 };
 
-// 4. Remove Item from Cart
 const removeCartItemFromDB = async (userId: string, productId: string) => {
   const cart = await Cart.findOne({ user: userId });
   if (!cart) {
@@ -150,7 +146,6 @@ const removeCartItemFromDB = async (userId: string, productId: string) => {
     (item) => item.product.toString() !== productId,
   );
 
-  // Recalculate total price
   cart.totalPrice = cart.items.reduce(
     (total, item) => total + item.price * item.quantity,
     0,
