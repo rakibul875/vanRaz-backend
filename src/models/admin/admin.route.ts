@@ -181,8 +181,6 @@ router.patch("/products/:productId/approve", AdminController.approveProduct);
  */
 router.patch("/products/:productId/reject", AdminController.rejectProduct);
 
-// ======================= Day 5: User Management & Security Routes =======================
-
 /**
  * @openapi
  * /admin/users:
@@ -305,8 +303,6 @@ router.patch("/users/:userId/role", AdminController.updateUserRole);
  *         description: User not found
  */
 router.patch("/users/:userId/status", AdminController.updateUserStatus);
-
-// ======================= Day 5: Admin Order Management Routes =======================
 
 /**
  * @openapi
