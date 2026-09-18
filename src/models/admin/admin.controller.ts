@@ -1,7 +1,7 @@
-import { Request, Response } from 'express';
-import { catchAsync } from '../../utils/catchAsync';
-import { sendResponse } from '../../utils/response';
-import { AdminService } from './admin.service';
+import { Request, Response } from "express";
+import { catchAsync } from "../../utils/catchAsync";
+import { sendResponse } from "../../utils/response";
+import { AdminService } from "./admin.service";
 
 const getDashboardStats = catchAsync(async (req: Request, res: Response) => {
   const result = await AdminService.getDashboardStatsFromDB();
@@ -9,7 +9,7 @@ const getDashboardStats = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: 'Admin dashboard overview statistics fetched successfully',
+    message: "Admin dashboard overview statistics fetched successfully",
     data: result,
   });
 });
@@ -20,7 +20,7 @@ const getPendingShops = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: 'Pending shops retrieved successfully',
+    message: "Pending shops retrieved successfully",
     data: result,
   });
 });
@@ -32,7 +32,7 @@ const approveShop = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: 'Shop approved successfully',
+    message: "Shop approved successfully",
     data: result,
   });
 });
@@ -45,7 +45,7 @@ const rejectShop = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: 'Shop rejected successfully',
+    message: "Shop rejected successfully",
     data: result,
   });
 });
@@ -56,7 +56,7 @@ const getPendingProducts = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: 'Pending products retrieved successfully',
+    message: "Pending products retrieved successfully",
     data: result,
   });
 });
@@ -68,7 +68,7 @@ const approveProduct = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: 'Product approved successfully',
+    message: "Product approved successfully",
     data: result,
   });
 });
@@ -81,12 +81,10 @@ const rejectProduct = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: 'Product rejected successfully',
+    message: "Product rejected successfully",
     data: result,
   });
 });
-
-// ======================= Day 5: User & Order Controllers =======================
 
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   const filters = {
@@ -102,7 +100,7 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: 'Users retrieved successfully',
+    message: "Users retrieved successfully",
     meta: result.meta,
     data: result.data,
   });
@@ -148,7 +146,7 @@ const getAllOrders = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: 'All system orders retrieved successfully',
+    message: "All system orders retrieved successfully",
     meta: result.meta,
     data: result.data,
   });
