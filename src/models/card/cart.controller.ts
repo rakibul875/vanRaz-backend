@@ -3,10 +3,9 @@ import { catchAsync } from "../../utils/catchAsync";
 import { sendSuccessResponse } from "../../config/response";
 import { CartServices } from "./cart.service";
 
-// GET /api/v1/cart
 const getCart = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.userId;
-  // console.log(userId);
+
   const result = await CartServices.getCartFromDB(userId as string);
   sendSuccessResponse(res, {
     statusCode: 200,
@@ -15,11 +14,10 @@ const getCart = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// POST /api/v1/cart
 const addToCart = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.userId;
   const result = await CartServices.addToCartInDB(userId as string, req.body);
-  // console.log(result, userId, "card", req.body);
+
   sendSuccessResponse(res, {
     statusCode: 200,
     message: "Product added to cart successfully",
@@ -27,7 +25,6 @@ const addToCart = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// PATCH /api/v1/cart/:productId
 const updateCartQuantity = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.userId;
   const { productId } = req.params;
@@ -44,7 +41,6 @@ const updateCartQuantity = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// DELETE /api/v1/cart/:productId
 const removeCartItem = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.userId;
   const { productId } = req.params;
