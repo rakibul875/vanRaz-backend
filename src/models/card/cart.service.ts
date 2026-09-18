@@ -1,12 +1,11 @@
 import { Types } from "mongoose";
 import { Cart } from "./cart.model";
-import { Product } from "../products/product.model"; // আপনার প্রোডাক্ট মডেলের পাথ দিন
+import { Product } from "../products/product.model";
 import {
   IAddToCartPayload,
   IUpdateCartQuantityPayload,
 } from "./cart.interface";
 
-// 1. Get User Cart
 const getCartFromDB = async (userId: string) => {
   let cart = await Cart.findOne({ user: userId }).populate({
     path: "items.product",
@@ -17,7 +16,6 @@ const getCartFromDB = async (userId: string) => {
     },
   });
 
-  // Create empty cart if not existing
   if (!cart) {
     cart = await Cart.create({
       user: new Types.ObjectId(userId),
@@ -29,16 +27,15 @@ const getCartFromDB = async (userId: string) => {
   return cart;
 };
 
-// 2. Add Item to Cart
 const addToCartInDB = async (userId: string, payload: IAddToCartPayload) => {
   const { productId, quantity = 1 } = payload;
-  // console.log("payload", payload);
+
   const product = await Product.findOne({
     _id: productId,
     isDeleted: { $ne: true },
     status: "approved",
   });
-  // console.log(userId);
+
   if (!product) {
     throw new Error("Product not found or unavailable!");
   }
@@ -48,7 +45,7 @@ const addToCartInDB = async (userId: string, payload: IAddToCartPayload) => {
   }
 
   let cart = await Cart.findOne({ user: userId });
-  // console.log(cart);
+
   if (!cart) {
     cart = new Cart({
       user: new Types.ObjectId(userId),
@@ -57,12 +54,9 @@ const addToCartInDB = async (userId: string, payload: IAddToCartPayload) => {
     });
   }
 
-
   const existingItemIndex = cart.items.findIndex(
     (item) => item.product.toString() === productId,
   );
-
-
 
   if (existingItemIndex > -1) {
     const newQuantity = cart.items[existingItemIndex].quantity + quantity;
