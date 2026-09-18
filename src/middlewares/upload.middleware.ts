@@ -1,6 +1,6 @@
-import multer from 'multer';
-import { v2 as cloudinary } from 'cloudinary';
-import dotenv from 'dotenv';
+import multer from "multer";
+import { v2 as cloudinary } from "cloudinary";
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -15,12 +15,12 @@ const storage = multer.memoryStorage();
 const fileFilter = (
   req: Express.Request,
   file: Express.Multer.File,
-  cb: multer.FileFilterCallback
+  cb: multer.FileFilterCallback,
 ) => {
-  if (file.mimetype.startsWith('image/')) {
+  if (file.mimetype.startsWith("image/")) {
     cb(null, true);
   } else {
-    cb(new Error('Only image files are allowed!'));
+    cb(new Error("Only image files are allowed!"));
   }
 };
 
@@ -28,19 +28,22 @@ export const upload = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB limit
+    fileSize: 5 * 1024 * 1024,
   },
 });
 
 export const uploadToCloudinary = (
   fileBuffer: Buffer,
-  folder: string = 'venraz'
+  folder: string = "venraz",
 ): Promise<string> => {
   return new Promise((resolve, reject) => {
-    // If Cloudinary env vars are missing in development, fallback or error gracefully
     if (!process.env.CLOUDINARY_CLOUD_NAME) {
-      console.warn('⚠️ Cloudinary keys not configured, returning mock avatar URL');
-      return resolve('https://images.unsplash.com/photo-1535713875002-d1d0cf377fde');
+      console.warn(
+        "⚠️ Cloudinary keys not configured, returning mock avatar URL",
+      );
+      return resolve(
+        "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde",
+      );
     }
 
     const uploadStream = cloudinary.uploader.upload_stream(
@@ -52,9 +55,9 @@ export const uploadToCloudinary = (
         if (result && result.secure_url) {
           resolve(result.secure_url);
         } else {
-          reject(new Error('Failed to get secure_url from Cloudinary'));
+          reject(new Error("Failed to get secure_url from Cloudinary"));
         }
-      }
+      },
     );
 
     uploadStream.end(fileBuffer);
