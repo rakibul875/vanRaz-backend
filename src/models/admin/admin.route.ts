@@ -1,12 +1,11 @@
-import { Router } from 'express';
-import { AdminController } from './admin.controller';
-import { authMiddleware } from '../../middlewares/auth.middleware';
-import { roleMiddleware } from '../../middlewares/role.middleware';
+import { Router } from "express";
+import { AdminController } from "./admin.controller";
+import { authMiddleware } from "../../middlewares/auth.middleware";
+import { roleMiddleware } from "../../middlewares/role.middleware";
 
 const router = Router();
 
-// Apply auth and admin role guard for all admin routes
-router.use(authMiddleware(), roleMiddleware('admin'));
+router.use(authMiddleware(), roleMiddleware("admin"));
 
 /**
  * @openapi
@@ -25,7 +24,7 @@ router.use(authMiddleware(), roleMiddleware('admin'));
  *       403:
  *         description: Forbidden - Admin access required
  */
-router.get('/dashboard-stats', AdminController.getDashboardStats);
+router.get("/dashboard-stats", AdminController.getDashboardStats);
 
 /**
  * @openapi
@@ -44,7 +43,7 @@ router.get('/dashboard-stats', AdminController.getDashboardStats);
  *       403:
  *         description: Forbidden - Admin access required
  */
-router.get('/shops/pending', AdminController.getPendingShops);
+router.get("/shops/pending", AdminController.getPendingShops);
 
 /**
  * @openapi
@@ -68,7 +67,7 @@ router.get('/shops/pending', AdminController.getPendingShops);
  *       404:
  *         description: Shop not found
  */
-router.patch('/shops/:shopId/approve', AdminController.approveShop);
+router.patch("/shops/:shopId/approve", AdminController.approveShop);
 
 /**
  * @openapi
@@ -104,7 +103,7 @@ router.patch('/shops/:shopId/approve', AdminController.approveShop);
  *       404:
  *         description: Shop not found
  */
-router.patch('/shops/:shopId/reject', AdminController.rejectShop);
+router.patch("/shops/:shopId/reject", AdminController.rejectShop);
 
 /**
  * @openapi
@@ -123,7 +122,7 @@ router.patch('/shops/:shopId/reject', AdminController.rejectShop);
  *       403:
  *         description: Forbidden - Admin access required
  */
-router.get('/products/pending', AdminController.getPendingProducts);
+router.get("/products/pending", AdminController.getPendingProducts);
 
 /**
  * @openapi
@@ -147,7 +146,7 @@ router.get('/products/pending', AdminController.getPendingProducts);
  *       404:
  *         description: Product not found
  */
-router.patch('/products/:productId/approve', AdminController.approveProduct);
+router.patch("/products/:productId/approve", AdminController.approveProduct);
 
 /**
  * @openapi
@@ -180,7 +179,7 @@ router.patch('/products/:productId/approve', AdminController.approveProduct);
  *       404:
  *         description: Product not found
  */
-router.patch('/products/:productId/reject', AdminController.rejectProduct);
+router.patch("/products/:productId/reject", AdminController.rejectProduct);
 
 // ======================= Day 5: User Management & Security Routes =======================
 
@@ -227,7 +226,7 @@ router.patch('/products/:productId/reject', AdminController.rejectProduct);
  *       403:
  *         description: Forbidden - Admin only
  */
-router.get('/users', AdminController.getAllUsers);
+router.get("/users", AdminController.getAllUsers);
 
 /**
  * @openapi
@@ -267,7 +266,7 @@ router.get('/users', AdminController.getAllUsers);
  *       404:
  *         description: User not found
  */
-router.patch('/users/:userId/role', AdminController.updateUserRole);
+router.patch("/users/:userId/role", AdminController.updateUserRole);
 
 /**
  * @openapi
@@ -305,7 +304,7 @@ router.patch('/users/:userId/role', AdminController.updateUserRole);
  *       404:
  *         description: User not found
  */
-router.patch('/users/:userId/status', AdminController.updateUserStatus);
+router.patch("/users/:userId/status", AdminController.updateUserStatus);
 
 // ======================= Day 5: Admin Order Management Routes =======================
 
@@ -342,7 +341,7 @@ router.patch('/users/:userId/status', AdminController.updateUserStatus);
  *       403:
  *         description: Forbidden - Admin only
  */
-router.get('/orders', AdminController.getAllOrders);
+router.get("/orders", AdminController.getAllOrders);
 
 /**
  * @openapi
@@ -380,6 +379,6 @@ router.get('/orders', AdminController.getAllOrders);
  *       404:
  *         description: Order not found
  */
-router.patch('/orders/:orderId/status', AdminController.updateOrderStatus);
+router.patch("/orders/:orderId/status", AdminController.updateOrderStatus);
 
 export const AdminRoutes = router;
